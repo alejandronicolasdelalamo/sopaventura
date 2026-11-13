@@ -26,6 +26,18 @@ check('la informacion de Jugar se abre', await p.evaluate(() => !!document.query
 await p.evaluate(() => document.querySelector('.news-box .btn.big').click()); await sleep(300);
 check('Entendido cierra la informacion', await p.evaluate(() => !document.querySelector('.news-box')));
 
+// ---- Jugar: si un texto no cupiera, se desplaza DENTRO de la misma caja (sin abrir ninguna ventana)
+await open('jugar');
+const scrollInfo = await p.evaluate(() => {
+  const d = document.querySelector('.slide.active .slide-desc');
+  d.textContent = 'Texto largo de prueba. '.repeat(14);
+  const before = { sh: d.scrollHeight, ch: d.clientHeight };
+  d.scrollTop = 30;
+  return { ...before, top: d.scrollTop, oy: getComputedStyle(d).overflowY, modal: !!document.querySelector('.modal-back') };
+});
+check('el texto largo se puede desplazar dentro de su caja', scrollInfo.sh > scrollInfo.ch && scrollInfo.top > 0 && scrollInfo.oy === 'auto' && !scrollInfo.modal, JSON.stringify(scrollInfo));
+check('las tarjetas ya no son botones anidados (div con rol)', await p.evaluate(() => [...document.querySelectorAll('.slide')].every(c => c.tagName === 'DIV' && c.getAttribute('role') === 'option')));
+
 // ---- Pintar: casilla a casilla
 await open('pintar');
 await p.evaluate(() => [...document.querySelectorAll('.seg-btn')].find(x => x.textContent.includes('Catálogo')).click()); await sleep(500);

@@ -26,5 +26,6 @@ export default defineConfig({
       },
     }),
   ],
-  test: { include: ['src/**/*.test.ts'] },
+  // Varios tests generan miles de niveles: 5 s (por defecto) se queda justo si el equipo esta ocupado
+  test: { include: ['src/**/*.test.ts'], testTimeout: 30000 },
 });

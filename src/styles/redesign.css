@@ -82,39 +82,52 @@
   display: flex; flex-direction: column; position: relative; overflow: hidden; margin: 0;
   background: linear-gradient(170deg, color-mix(in srgb, var(--hue) 70%, #0b0730) 0%, #0e0936 62%, #07051a 100%);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--hue) 60%, #fff), 0 0 0 7px #07051a, 0 16px 0 0 rgba(0, 0, 0, .35);
-  transform: scale(.88); opacity: .55; transition: transform .3s var(--ease), opacity .3s; }
+  transform: scale(.8); opacity: .55; transition: transform .3s var(--ease), opacity .3s; }
 .slide.active { transform: scale(1); opacity: 1; box-shadow: 0 0 0 3px #fff, 0 0 0 7px #07051a, 0 0 32px 4px color-mix(in srgb, var(--hue) 70%, transparent), 0 16px 0 0 rgba(0, 0, 0, .35); }
 .slide-art { flex: 1; min-height: 84px; display: grid; place-items: center; position: relative; overflow: hidden;
   background: radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--hue) 55%, transparent) 0, transparent 62%),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 6px); }
 /* El dibujo se adapta al hueco: nunca se sale del area ni tapa el titulo (antes, en moviles bajos, el cerezo pisaba "Aventura") */
-.slide-art img { position: absolute; inset: 14px 0; margin: auto; width: min(62%, 210px); height: min(calc(100% - 28px), 210px); object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .35)); animation: floaty 3s steps(6) infinite; }
+.slide-art img { position: absolute; inset: 14px 0; margin: auto; width: min(60%, 190px); height: min(calc(100% - 28px), 190px); max-width: 76%; max-height: calc(100% - 28px); object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .35)); animation: floaty 3s steps(6) infinite; }
+/* Tamano RELATIVO al hueco del dibujo (--rw/--rh los pone jugar.ts: misma superficie para todos): si el hueco es pequeno, todos se reducen por igual */
+@supports (width: 1cqw) {
+  .slide-art { container-type: size; }
+  .slide-art img { --u: min(190px, calc(100cqh - 24px), 72cqw); width: calc(var(--rw, .9) * var(--u)); height: calc(var(--rh, .9) * var(--u)); max-width: none; max-height: none; inset: 0; }
+  .slide.choice .slide-art img { --u: 150px; }
+}
 .slide:not(.active) .slide-art img { animation: none; }
 @keyframes floaty { 50% { transform: translateY(-8px); } }
 .picon.huge { width: 110px; height: 110px; }
 .slide-icon { position: absolute; top: 14px; left: 14px; width: 44px; height: 44px; display: grid; place-items: center; background: var(--hue); box-shadow: 0 0 0 3px #07051a; }
 .slide-body { padding: 14px 18px 4px; display: flex; flex-direction: column; gap: 4px; }
 .slide-kicker { font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: #a5f3fc; }
-.slide-title { margin: 0; font-family: var(--font-title); font-size: 1rem; line-height: 1.4; }
+.slide-title { margin: 0; font-family: var(--font-title); font-size: clamp(.74rem, 4.6vw, 1rem); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slide.choice .slide-title { white-space: normal; font-size: 1rem; }
 .slide-desc { margin: 0; font-size: 1.2rem; line-height: 1.1; color: #d9d2ff; }
 .slide-meta { font-size: 1.05rem; color: #ffd86b; }
 .slide-cta { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 18px 18px; min-height: 48px; background: var(--hue);
   font-family: var(--font-title); font-size: .7rem; box-shadow: 0 0 0 3px #07051a, inset 0 -4px 0 0 rgba(0, 0, 0, .3), inset 0 3px 0 0 rgba(255, 255, 255, .25); }
 .slide:not(.active) .slide-cta { opacity: .4; }
-/* Moviles bajos: texto algo mas compacto para que siempre quepan titulo, descripcion y el boton Entrar */
+/* Todas las tarjetas tienen la misma distribucion: dibujo arriba, texto de 2 lineas reservadas, dato y boton Entrar */
+/* Texto: caja de 2 lineas. Si algo no cupiera (movil estrecho, letra grande), se desplaza hacia abajo DENTRO de la misma caja, sin abrir nada */
+.slide-desc { height: calc(2.2em + 2px); min-height: calc(2.2em + 2px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding-right: 6px;
+  scrollbar-width: thin; scrollbar-color: #8b7bff rgba(255, 255, 255, .08); }
+.slide-desc::-webkit-scrollbar { width: 5px; }
+.slide-desc::-webkit-scrollbar-track { background: rgba(255, 255, 255, .08); }
+.slide-desc::-webkit-scrollbar-thumb { background: #8b7bff; }
+.slide.choice .slide-desc { height: auto; min-height: 0; overflow: visible; }
+.slide { cursor: pointer; }
+.slide-meta { min-height: 1.2em; }
+/* Moviles bajos: se gana sitio quitando la linea "desliza" y apretando un poco los margenes (el texto y el dibujo no cambian) */
 @media (max-height: 720px) {
   .swipe-hint { display: none; }
-  .slide-body { padding: 8px 14px 2px; gap: 2px; }
-  .slide-desc { font-size: 1.05rem; line-height: 1.05; }
-  .slide-kicker, .slide-meta { font-size: .95rem; }
-  .slide-cta { margin: 6px 14px 12px; min-height: 42px; }
+  .slide-cta { margin: 8px 18px 14px; }
   .slide.choice .slide-art { min-height: 130px; }
 }
 @media (max-height: 620px) {
-  .slide-art { min-height: 56px; }
   .slide-art img { inset: 8px 0; height: min(calc(100% - 16px), 210px); }
-  .slide-desc { font-size: .95rem; }
-  .swipe-hint { display: none; }
+  .slide-body { padding: 10px 16px 2px; }
+  .slide-cta { margin: 6px 16px 12px; min-height: 44px; }
   .slide.choice .slide-art img { width: 110px; height: 110px; }
 }
 .car-arrow { position: absolute; z-index: 3; top: 50%; transform: translateY(-50%); background: rgba(20, 12, 62, .85); }
@@ -636,3 +649,4 @@ input, textarea, select { font-size: max(16px, 1em); }
 .shim { position: absolute; z-index: 1; background: #ffffff; box-shadow: 0 0 0 0 transparent; opacity: 0; pointer-events: none; animation: shim 3s steps(1) var(--d, 0s) infinite; }
 @keyframes shim { 0%, 55% { opacity: 0; } 56%, 70% { opacity: .95; } 71%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .shim { display: none; } }
+.slide-meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
