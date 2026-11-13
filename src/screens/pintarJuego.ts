@@ -18,6 +18,7 @@ import { confetti, confettiRain } from '../ui/confetti';
 import { button, el, modal, reducedMotion, toast } from '../ui/dom';
 import { buzz } from '../ui/haptics';
 import { pixelIcon } from '../ui/icons';
+import { infoButton } from '../ui/info';
 import { back } from '../ui/router';
 
 const HINT_COST = 10;
@@ -32,7 +33,12 @@ export function renderPintarJuego(root: HTMLElement, params: { id: string; repla
   const role: 1 | 2 = getState().role === 'izana' ? 2 : 1;
   const partnerName = params.bot ? 'Olaf' : role === 1 ? 'Izana' : 'Nico';
   const modeKey = `nuestra-sopa:paintmode:${tpl.id}`;
-  const startMode = ((): PaintMode => { try { return (localStorage.getItem(modeKey) as PaintMode) || getState().settings.paintMode; } catch { return getState().settings.paintMode; } })();
+  // Casilla a casilla por defecto. "Por color" (todo de golpe) ya no se ofrece: lo guardado como 'auto' pasa a casilla a casilla.
+  const startMode = ((): PaintMode => {
+    let m: string | null = null;
+    try { m = localStorage.getItem(modeKey); } catch { /* ignorar */ }
+    return (m || getState().settings.paintMode) === 'zone' ? 'zone' : 'classic';
+  })();
 
   const screen = el('div', 'screen paint-screen');
   const top = el('header', 'topbar');
@@ -58,7 +64,7 @@ export function renderPintarJuego(root: HTMLElement, params: { id: string; repla
   bHint.append(pixelIcon('bulb', '#ffd86b'), el('span', '', `Pista ${HINT_COST}`)); bHint.setAttribute('aria-label', 'Pista');
   bUndo.append(pixelIcon('undo', '#fff'), el('span', '', 'Deshacer')); bUndo.setAttribute('aria-label', 'Deshacer');
   bFit.append(pixelIcon('map', '#fff'), el('span', '', 'Ver todo')); bFit.setAttribute('aria-label', 'Ver todo el dibujo');
-  tools.append(bHint, bUndo, bFit);
+  tools.append(bHint, bUndo, bFit, infoButton('pintar'));   // la "i" explica como se pinta
 
   const perColor = tpl.palette.map(() => 0);
   for (const c of tpl.cells) if (c !== 255) perColor[c]++;
@@ -116,17 +122,16 @@ export function renderPintarJuego(root: HTMLElement, params: { id: string; repla
     onWrongTap: () => { sfx('pop'); buzz(6); },
     onOp: op => { sendPaintOp(tpl.id, op); persist(); refreshHud(); },
     onProgress: () => { refreshHud(); persist(); milestone(); },
-    onShine: () => fxShine(),
     onPaintTick: () => { if (++tick % 4 === 0) sfx('paint', WAVE_NOTES[(tick >> 2) % WAVE_NOTES.length]); },
     onColorComplete: c => {
-      sfx('done'); buzz([15, 40, 15, 40, 30]);
-      engine.shineNow(750); engine.burst(...engine.center, 46, c);
-      canvas.classList.remove('punch'); void canvas.offsetWidth; canvas.classList.add('punch');
+      // Color completo: aviso suave y NADA automatico. No hay barrido de brillo ni sacudida del lienzo, y el color NO cambia solo:
+      // lo eliges tu cuando quieras (antes saltaba al siguiente y la pantalla se "rayaba").
+      sfx('done'); buzz([15, 40, 15]);
       const sw = swatches[c]; sw.classList.add('celebrate');
       const r = sw.getBoundingClientRect();
-      confetti(r.left + r.width / 2, r.top, 26, [tpl.palette[c], '#fff8e8', '#ffd86b']);
+      confetti(r.left + r.width / 2, r.top, 14, [tpl.palette[c], '#fff8e8', '#ffd86b']);
       refreshHud();
-      if (!engine.isComplete) setTimeout(() => { const n = engine.nextIncomplete(c); if (n >= 0 && !engine.isComplete) { engine.select(n, true); swatches[n].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } }, 650);
+      if (!engine.isComplete) toast('¡Color completo! Elige el siguiente');
     },
     onComplete: () => finish(true),
   });
@@ -135,11 +140,11 @@ export function renderPintarJuego(root: HTMLElement, params: { id: string; repla
   engine.setMode(startMode);
 
   const MODE_INFO: Record<PaintMode, { icon: string; name: string; toast: string }> = {
-    auto: { icon: 'brush', name: 'Por color', toast: 'Por color: un toque pinta todo el color' },
+    auto: { icon: 'star', name: 'Casilla a casilla', toast: 'Casilla a casilla: toca o arrastra para pintar' },
     zone: { icon: 'heart', name: 'Por zonas', toast: 'Por zonas: un toque (o arrastrar) pinta la zona entera' },
     classic: { icon: 'star', name: 'Casilla a casilla', toast: 'Casilla a casilla: toca o arrastra para pintar' },
   };
-  const NEXT: Record<PaintMode, PaintMode> = { auto: 'zone', zone: 'classic', classic: 'auto' };
+  const NEXT: Record<PaintMode, PaintMode> = { auto: 'zone', zone: 'classic', classic: 'zone' };
   function drawModeBtn(): void {
     const m = MODE_INFO[engine.mode];
     bMode.replaceChildren(pixelIcon(m.icon, '#fff'));

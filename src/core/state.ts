@@ -77,7 +77,7 @@ function fresh(): State {
     stats: { wordsFound: 0, levelsDone: 0, perfect: 0, hintsUsed: 0, paintDone: 0, dailyDone: 0, messagesSent: 0, bestCombo: 0 },
     eggs: [], quick: [...DEFAULT_QUICK], paintDone: [], vouchers: [], romaUnlocked: false,
     avatar: null, recentWords: [], history: [], week: { id: '', words: 0, claimed: false }, specialDates: {}, eventsClaimed: [], myWords: [], powerups: { freeze: 1, clean: 1, bolt: 1, radar: 1 }, stickers: [], missions: { week: '', items: [] }, modeBest: {}, critters: { day: '', n: 0 },
-    settings: { music: true, sfx: true, vibrate: true, theme: 'auto', paintMode: 'auto', reduceMotion: false, pinHash: null, lastMode: 'chill', colorblind: false, bigText: false, tutorialDone: false, newsSeen: false, boardSize: 0, musicVol: 0.8, sfxVol: 0.9 },
+    settings: { music: true, sfx: true, vibrate: true, theme: 'auto', paintMode: 'classic', reduceMotion: false, pinHash: null, lastMode: 'chill', colorblind: false, bigText: false, tutorialDone: false, newsSeen: false, boardSize: 0, musicVol: 0.8, sfxVol: 0.9 },
   };
 }
 
@@ -90,7 +90,9 @@ function load(): State {
     if (raw) {
       const p = JSON.parse(raw) as Partial<State>;
       const f = fresh();
-      return { ...f, ...p, stats: { ...f.stats, ...p.stats }, settings: { ...f.settings, ...p.settings }, streak: { ...f.streak, ...p.streak } };
+      const merged = { ...f, ...p, stats: { ...f.stats, ...p.stats }, settings: { ...f.settings, ...p.settings }, streak: { ...f.streak, ...p.streak } };
+      if (merged.settings.paintMode === 'auto') merged.settings.paintMode = 'classic';   // "por color" (pintar todo de golpe) ya no existe: se pinta casilla a casilla
+      return merged;
     }
   } catch { /* sin almacenamiento: empezamos de cero */ }
   return fresh();

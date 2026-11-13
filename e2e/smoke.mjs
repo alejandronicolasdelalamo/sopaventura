@@ -139,7 +139,7 @@ try {
   await shot('14-color-pintado');
   check('el pintado por color avanza el progreso', painted);
   const after = await page.$eval('.hud-meta', e => e.textContent);
-  check('pintar un color pinta muchas casillas a la vez', parseInt(after) > 5, `(${before} -> ${after})`);
+  check('pintar es casilla a casilla: un toque NO pinta todo el color', parseInt(after) <= 5 && painted, `(${before} -> ${after})`);
 
   // ---- colorear libre ----
   await page.goto(`${URL}/#pintar-menu`, { waitUntil: 'networkidle0' }); await sleep(700);

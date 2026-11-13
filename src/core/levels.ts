@@ -157,10 +157,10 @@ function buildSpec(
   let words = cleanWords([...fits, ...rest], size).slice(0, count);
   if (words.length < count) words = cleanWords([...words, ...pick(FALLBACK_WORDS)], size).slice(0, count);
 
-  // Palabras EXTRA: se esconden 2-3 que no estan en la lista (dan monedas). Se prefieren comunes y de otros temas.
+  // Palabras EXTRA: se esconden varias (4-8, el numero varia por nivel) que no estan en la lista (dan monedas). Se prefieren comunes y de otros temas.
   const extraPool = [...new Set([...COMMON_WORDS, ...GENERAL.flatMap(themePool).map(entryWord)].map(norm))];
   const extras: string[] = [];
-  const maxExtras = size >= 12 ? 3 : 2;
+  const maxExtras = (size >= 12 ? 5 : 4) + Math.floor(rng() * 3);
   for (const w of shuffle(extraPool, rng)) {
     if (extras.length >= maxExtras) break;
     if (w.length < 4 || w.length > Math.min(7, size - 2) || words.includes(w) || w === [...w].reverse().join('')) continue;

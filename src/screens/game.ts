@@ -25,6 +25,7 @@ import { button, el, modal, reducedMotion, toast, flyCoins } from '../ui/dom';
 import { burst, firework, sparkle } from '../ui/fx';
 import { buzz } from '../ui/haptics';
 import { pixelIcon } from '../ui/icons';
+import { openGuide, showInfo, TOPICS } from '../ui/info';
 import { back, navigate } from '../ui/router';
 import { MODES } from './levelSheet';
 import { pixelStar } from './map';
@@ -209,8 +210,20 @@ export function renderGame(root: HTMLElement, params: GameParams): () => void {
   setMusicMood(isl ? biomeOf(isl) : 'menu');
   if (mode === 'blind') words.prepend(el('div', 'g-blind-head', `Tema: ${theme.name} · ${total} palabras escondidas`));
   const extraChip = el('div', 'g-extra-chip');
-  const drawExtraChip = () => { extraChip.textContent = extrasFound.size ? `✦ Extras: ${extrasFound.size} · +${extraCoins} monedas` : `✦ ${extraIdx.size || 'Hay'} palabras extra escondidas · dan monedas`; extraChip.classList.toggle('got', extrasFound.size > 0); };
-  if (!params.live && mode !== 'riddle') { drawExtraChip(); words.append(extraChip); }
+  const drawExtraChip = () => { extraChip.textContent = extrasFound.size ? `✦ Extras: ${extrasFound.size} · +${extraCoins} monedas` : '✦ Hay palabras extra escondidas · dan monedas'; extraChip.classList.toggle('got', extrasFound.size > 0); };
+  if (!params.live && mode !== 'riddle') {
+    drawExtraChip();
+    const extraRow = el('div', 'g-extra-row');
+    // la "i" explica las palabras extra y pausa la partida mientras la lees
+    const chipInfo = button('', 'btn small icon-btn info-btn g-info', () => {
+      if (ended || paused) { showInfo('extras'); return; }
+      paused = true; sfx('tap');
+      openGuide(TOPICS.extras.pages, { onClose: () => { paused = false; last = performance.now(); } });
+    });
+    chipInfo.append(pixelIcon('info', '#fff')); chipInfo.setAttribute('aria-label', 'Información: palabras extra');
+    extraRow.append(extraChip, chipInfo);
+    words.append(extraRow);
+  }
   if (secretPick) words.append(el('div', 'g-secret-hint', 'Aquí hay una palabra secreta escondida…'));
 
   // ---- tutorial de la primera partida (no bloquea el tablero) ----
@@ -219,14 +232,16 @@ export function renderGame(root: HTMLElement, params: GameParams): () => void {
   const hand = el('div', 'g-hand');
   hand.setAttribute('aria-hidden', 'true');
   let handAnim: Animation | null = null;
-  function tutSay(text: string, btn: string, onBtn: () => void, where: 'bottom' | 'top' = 'bottom'): void {
+  function tutSay(text: string, btn: string, onBtn: () => void, where: 'bottom' | 'top' = 'bottom', onBack?: () => void): void {
     tutBox.replaceChildren();
     const olafT = getTemplate('olaf');
     if (olafT) { const im = el('img', 'g-tut-olaf'); im.src = thumb(olafT, 'color', 64); im.alt = ''; tutBox.append(im); }
     const col = el('div', 'g-tut-col');
     col.append(el('p', '', text));
-    const b = button(btn, 'btn small', () => { sfx('tap'); onBtn(); });
-    col.append(b);
+    const row = el('div', 'g-tut-btns');
+    if (onBack) row.append(button('Atrás', 'btn small ghost', () => { sfx('tap'); onBack(); }));   // se puede volver al paso anterior
+    row.append(button(btn, 'btn small', () => { sfx('tap'); onBtn(); }));
+    col.append(row);
     tutBox.append(col);
     tutBox.className = `g-tut over ${where}`;
     tutBox.setAttribute('role', 'status');
@@ -249,17 +264,20 @@ export function renderGame(root: HTMLElement, params: GameParams): () => void {
     tutStep = 99; handAnim?.cancel(); hand.remove(); tutBox.remove(); actions.classList.remove('tut-glow');
     update(s => { s.settings.tutorialDone = true; });
   }
+  /** Vuelve al paso anterior del tutorial. */
+  function tutBack(): void { actions.classList.remove('tut-glow'); tutStep -= 2; tutNext(); }
   function tutNext(): void {
     tutStep++;
     if (tutStep === 1) {
-      tutSay(`¡Hola! Soy Olaf. Desliza el dedo sobre las letras de «${puzzle.placements[0].word}», como te enseño.`, 'Saltar', tutEnd);
-      tutHand();
+      const done1 = found.has(0);   // si vuelves aqui despues de acertar, ya no hace falta repetirlo
+      tutSay(`¡Hola! Soy Olaf. Desliza el dedo sobre las letras de «${puzzle.placements[0].word}», como te enseño.`, done1 ? 'Siguiente' : 'Saltar', done1 ? tutNext : tutEnd);
+      if (!done1) tutHand();
     } else if (tutStep === 2) {
       handAnim?.cancel(); hand.remove();
-      tutSay('¡Así se hace! Palabras seguidas en menos de 7 segundos = combo y más premio.', 'Siguiente', tutNext);
+      tutSay('¡Así se hace! Palabras seguidas en menos de 7 segundos = combo y más premio.', 'Siguiente', tutNext, 'bottom', tutBack);
     } else if (tutStep === 3) {
       actions.classList.add('tut-glow');
-      tutSay('¿Atascado? Pista marca la primera letra y Revelar te da una palabra entera.', '¡A jugar!', tutEnd, 'top');
+      tutSay('¿Atascado? Pista marca la primera letra y Revelar te da una palabra entera.', '¡A jugar!', tutEnd, 'top', tutBack);
     } else tutEnd();
   }
   if (tutorial) setTimeout(() => { if (!ended && tutStep === 0) tutNext(); }, motion ? 1500 : 200);
@@ -731,6 +749,7 @@ export function renderGame(root: HTMLElement, params: GameParams): () => void {
     const close = modal(box, { dismissable: false });
     box.append(
       button('Seguir', 'btn big', () => { sfx('tap'); paused = false; last = performance.now(); close(); }),
+      button('Ayuda', 'btn small', () => { showInfo('extras', 'niveles', 'ayudas'); }),
       ...(duo && !duo.bot ? [] : [button('Reiniciar nivel', 'btn small', () => { close(); navigate('game', again(), true); })]),
       button(duo ? 'Salir de la partida' : 'Salir al mapa', 'btn small ghost', () => { close(); exit(); }),
     );

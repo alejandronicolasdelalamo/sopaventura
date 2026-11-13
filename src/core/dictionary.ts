@@ -1,4 +1,5 @@
 import { COMMON_WORDS } from '../data/common';
+import { COMMON_WORDS2 } from '../data/common2';
 import { FALLBACK_WORDS, WORDS, type WordEntry } from '../data/words';
 import { norm } from './text';
 
@@ -12,6 +13,7 @@ export function knownWords(): Set<string> {
   for (const l of Object.values(WORDS)) for (const e of l) { const n = norm(wordOf(e)); if (n.length >= 4) known.add(n); }
   for (const e of FALLBACK_WORDS) { const n = norm(e); if (n.length >= 4) known.add(n); }
   for (const w of COMMON_WORDS) known.add(norm(w));
+  for (const w of COMMON_WORDS2) known.add(norm(w));
   return known;
 }
 

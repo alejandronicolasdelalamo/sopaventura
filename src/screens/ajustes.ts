@@ -6,6 +6,7 @@ import { back, navigate } from '../ui/router';
 import { enablePush } from '../net/push';
 import { logout } from '../net/session';
 import { showNews } from './novedades';
+import { showInfo, TOPICS } from '../ui/info';
 import { exportBackup, importBackup } from '../core/extras';
 
 function toggle(label: string, key: 'music' | 'sfx' | 'vibrate' | 'reduceMotion' | 'colorblind' | 'bigText', hint = ''): HTMLElement {
@@ -88,7 +89,7 @@ export function renderAjustes(root: HTMLElement): void {
     toggle('Letra grande', 'bigText', 'Letras más grandes en el tablero y la lista'),
     choice('Tamaño del tablero', 'boardSize', [[0, 'Auto'], [10, '10'], [11, '11'], [12, '12'], [13, '13']], 'Máximo de casillas por lado. Si 10×10 te queda justo en el móvil, elige 10.'),
     choice('Tema', 'theme', [['auto', 'Auto'], ['light', 'Claro'], ['dark', 'Oscuro']]),
-    choice('Pintar por números', 'paintMode', [['auto', 'Por color'], ['zone', 'Por zonas'], ['classic', 'Casilla a casilla']], 'Modo global (también se puede cambiar en cada dibujo)'),
+    choice('Pintar por números', 'paintMode', [['classic', 'Casilla a casilla'], ['zone', 'Por zonas']], 'Modo global (también se puede cambiar en cada dibujo)'),
   );
   const pin = el('div', 'card setting');
   pin.append(el('strong', '', 'PIN al abrir'), button(getState().settings.pinHash ? 'Cambiar' : 'Activar', 'btn small', pinDialog));
@@ -101,7 +102,13 @@ export function renderAjustes(root: HTMLElement): void {
   tut.append(el('strong', '', 'Tutorial'), button('Volver a verlo', 'btn small', () => { update(s => { s.settings.tutorialDone = false; }); toast('Saldrá en tu próxima partida'); }));
   const news = el('div', 'card setting');
   news.append(el('strong', '', 'Novedades'), button('Ver tutorial', 'btn small', () => showNews()));
-  body.append(tut, news);
+  // Ayuda: cada tema se puede abrir cuando quieras (en el juego tambien sale un icono "i" donde hace falta)
+  const help = el('div', 'card setting col');
+  help.append(el('strong', '', 'Ayuda e información'), el('small', '', 'Todas las explicaciones del juego. También encuentras el icono «i» en las pantallas.'));
+  const helpBtns = el('div', 'help-btns');
+  for (const [id, t] of Object.entries(TOPICS)) { const b = button(t.label, 'btn small ghost', () => showInfo(id)); b.prepend(pixelIcon('info', 'currentColor', 'picon')); helpBtns.append(b); }
+  help.append(helpBtns);
+  body.append(tut, news, help);
   // Fechas especiales (para la cuenta atras y los regalos)
   const fechas = el('div', 'card setting col');
   fechas.append(el('strong', '', 'Fechas especiales'), el('small', '', 'Para la cuenta atrás y los regalos del menú.'));

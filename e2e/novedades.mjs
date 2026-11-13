@@ -22,7 +22,14 @@ const st = () => p.evaluate(() => JSON.parse(localStorage.getItem('nuestra-sopa:
 await open('ajustes');
 await p.evaluate(() => [...document.querySelectorAll('button')].find(x => x.textContent.includes('Ver tutorial')).click()); await sleep(400);
 check('el tutorial de novedades se abre', await p.evaluate(() => !!document.querySelector('.news-box h2')));
-for (let i = 0; i < 4; i++) { await p.evaluate(() => document.querySelector('.news-box .btn.big').click()); await sleep(250); }
+const t0 = await p.evaluate(() => document.querySelector('.news-box h2').textContent);
+check('en la primera pagina no hay boton Atras', await p.evaluate(() => ![...document.querySelectorAll('.news-box .btn')].some(x => x.textContent.includes('Atrás'))));
+await p.evaluate(() => document.querySelector('.news-box .btn.big').click()); await sleep(250);
+const t1 = await p.evaluate(() => document.querySelector('.news-box h2').textContent);
+check('Siguiente cambia de pagina', t1 !== t0, `(${t0} → ${t1})`);
+await p.evaluate(() => [...document.querySelectorAll('.news-box .btn')].find(x => x.textContent.includes('Atrás')).click()); await sleep(250);
+check('Atras vuelve a la pagina anterior', (await p.evaluate(() => document.querySelector('.news-box h2').textContent)) === t0);
+for (let i = 0; i < 5; i++) { await p.evaluate(() => document.querySelector('.news-box .btn.big').click()); await sleep(250); }
 check('al terminarlo queda marcado como visto', (await st()).settings.newsSeen === true);
 await p.evaluate(() => { const i = document.getElementById('vol-musicVol'); i.value = '30'; i.dispatchEvent(new Event('input', { bubbles: true })); const j = document.getElementById('vol-sfxVol'); j.value = '55'; j.dispatchEvent(new Event('input', { bubbles: true })); });
 const s1 = await st();

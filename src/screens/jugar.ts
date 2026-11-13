@@ -6,6 +6,7 @@ import { thumb } from '../paint/store';
 import { setMusicMood, sfx } from '../ui/audio';
 import { button, el } from '../ui/dom';
 import { pixelIcon } from '../ui/icons';
+import { showInfo } from '../ui/info';
 import { mountSky } from '../ui/sky';
 import { back, navigate } from '../ui/router';
 import { openLevelSheet } from './levelSheet';
@@ -117,7 +118,10 @@ function renderCarousel(root: HTMLElement, title: string, list: Slide[], key: st
 
   const stage = el('div', 'car-stage');
   stage.append(prev, track, next);
-  fg.append(top, stage, dots, el('p', 'swipe-hint', 'Desliza para ver los modos · toca para entrar'));
+  const help = button('', 'btn small ghost info-help', () => showInfo(key === 'aventura' ? 'modos' : 'jugar'));
+  help.append(pixelIcon('info', 'currentColor'), document.createTextNode('¿Cómo funciona?'));
+  help.setAttribute('aria-label', 'Información sobre los modos');
+  fg.append(top, stage, dots, help, el('p', 'swipe-hint', 'Desliza para ver los modos · toca para entrar'));
   screen.append(fg);
   root.append(screen);
   const stopSky = mountSky(screen);

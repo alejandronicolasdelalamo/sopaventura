@@ -380,6 +380,8 @@
 .g-tut button { pointer-events: auto; align-self: flex-end; margin: 0; }
 .g-tut p { margin: 0 0 6px; font-size: 1.15rem; line-height: 1.15; }
 .g-tut-col { display: flex; flex-direction: column; min-width: 0; }
+.g-tut-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.g-tut-btns .btn.ghost { color: #ece6ff; box-shadow: 0 0 0 3px #3a2a8a; }
 .g-tut-olaf { width: 56px; height: 56px; flex: none; image-rendering: pixelated; animation: floaty 2s steps(4) infinite; }
 .g-hand { position: absolute; left: 0; top: 0; z-index: 9; width: 30px; height: 30px; margin: -6px 0 0 -6px; pointer-events: none;
   background: radial-gradient(circle at 40% 40%, #fff 0 5px, #ffd86b 6px 10px, rgba(255, 216, 107, .35) 11px 15px, transparent 16px); }
