@@ -38,7 +38,7 @@ export const BASE_CONTENT: Content = {
   },
   eggs: [
     { id: 'titulo7', trigger: 'Toca el título 7 veces', message: 'ok mañana 💜', coins: 20 },
-    { id: 'ragebite', trigger: 'Encuentra RAGEBITE en una sopa', message: '¡RAGEBITE! Nico ya está calentando.', coins: 15 },
+    { id: 'ragebite', trigger: 'Encuentra RAGEBAIT en una sopa', message: '¡RAGEBAIT! Nico ya está calentando.', coins: 15 },
     { id: 'okmanana', trigger: 'Encuentra OKMAÑANA en una sopa', message: 'ok mañana 💜', coins: 15 },
     { id: 'olaf5', trigger: 'Toca a Olaf 5 veces', message: 'Miau. (Olaf te manda un beso).', coins: 10 },
     { id: 'monedas10', trigger: 'Toca el contador de monedas 10 veces', message: 'Eso no da más monedas, Cuchi. Pero toma estas.', coins: 5 },

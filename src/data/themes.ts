@@ -28,7 +28,7 @@ export const THEMES: Record<ThemeId, Theme> = {
   adventure: t('adventure', 'Hora de Aventuras', '#3aa0ff', '#9be7ff', '#ffd23f'),
   minecraft: t('minecraft', 'Minecraft', '#3f6b2b', '#7fb04a', '#8b5a2b'),
   pokemon: t('pokemon', 'Pokemon', '#b3202a', '#ff6b6b', '#ffd23f'),
-  gaming: t('gaming', 'Ragebite y gaming', '#1a1a2e', '#5a2d82', '#ff3b3b'),
+  gaming: t('gaming', 'Ragebait y gaming', '#1a1a2e', '#5a2d82', '#ff3b3b'),
   ghibli: t('ghibli', 'Disney / Pixar / Ghibli', '#2a6f97', '#a9d6e5', '#f4a261'),
   comida: t('comida', 'Comida', '#9c3d1d', '#f4a259', '#ffe066'),
   animales: t('animales', 'Animales', '#386641', '#a7c957', '#f2e8cf'),

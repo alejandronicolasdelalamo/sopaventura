@@ -18,7 +18,7 @@ NSQK se ha quitado del juego (isla Vinilo ahora: Kanye, Lucho RK, Amaia, Taylor 
 - **Cómo conocí a vuestra madre:** frases del doblaje español ("Legendario", "Desafío aceptado", "Choca esos cinco"): comprueba que las recuerdas así.
 - **Attack on Titan:** he usado los nombres en japonés de los openings (*Guren no Yumiya*, *Jiyuu no Tsubasa*), *Shingeki* y *Sasageyo*. Confirma que son los que os gustan.
 - **Hora de Aventuras / Rick y Morty:** nombres en español de España según el doblaje habitual (Princesa Chicle, Rey Helado, Lady Arcoíris): puede variar.
-- **Ragebite:** aparece como palabra obligatoria. Si me das jerga o personajes del juego, añado más.
+- **Ragebait:** aparece como palabra obligatoria. Si me das jerga o personajes del juego, añado más.
 
 ## Datos personales (solo uso lo que me contaste)
 

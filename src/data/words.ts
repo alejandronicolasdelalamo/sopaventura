@@ -76,7 +76,7 @@ export const WORDS: Record<ThemeId, WordEntry[]> = {
     ['Magikarp', 'Solo salpica'], ['Togepi', 'Huevo con carita'], ['Mimikyu', 'Disfrazado de Pikachu'], ['Slowpoke', 'El mas lento'], ['Vaporeon', 'Eevee de agua'],
   ],
   gaming: [
-    ['Ragebite', 'Nuestro juego de siempre'], ['Rage', 'Furia al perder'], ['Lag', 'Cuando todo va a trompicones'], ['Noob', 'Principiante'], ['GG', 'Buena partida'],
+    ['Ragebait', 'Nuestro juego de siempre'], ['Rage', 'Furia al perder'], ['Lag', 'Cuando todo va a trompicones'], ['Noob', 'Principiante'], ['GG', 'Buena partida'],
     ['AFK', 'Lejos del teclado'], ['Buff', 'Mejora a un personaje'], ['Nerf', 'Debilitar algo'], ['Respawn', 'Volver a aparecer'], ['Loot', 'Botin'], ['Boss', 'Jefe final'],
     ['Tilt', 'Perder los nervios'], ['Clutch', 'Ganar contra todo pronostico'], ['Smurf', 'Cuenta alternativa'], ['Main', 'Personaje principal'], ['Tanque', 'El que aguanta golpes'],
     ['Healer', 'El que cura'], ['Rush', 'Ir a toda prisa'], ['Headshot', 'Disparo a la cabeza'], ['Gamer', 'Quien juega mucho'], ['Mando', 'Se agarra con las dos manos'],
@@ -154,7 +154,7 @@ export const WORDS: Record<ThemeId, WordEntry[]> = {
   ],
   nosotros: [
     ['Nico', 'Tu novio'], ['Izana', 'Mi novia'], ['Cuchi', 'Apodo cariñoso'], ['Izanis', 'Apodo de Izana'], ['Burrito', 'Apodo de Nico'], ['Nicolasia', 'Apodo de Nico'],
-    ['Alejandro', 'Nombre completo de Nico'], ['Olaf', 'Nuestro gato'], ['Ragebite', 'Nuestro juego'], ['Ok mañana', 'Lo que Izana dice mucho'], ['Instagram', 'Donde empezo todo'],
+    ['Alejandro', 'Nombre completo de Nico'], ['Olaf', 'Nuestro gato'], ['Ragebait', 'Nuestro juego'], ['Ok mañana', 'Lo que Izana dice mucho'], ['Instagram', 'Donde empezo todo'],
     ['Julio', 'Mes en que empezamos a hablar'], ['Septiembre', 'Mes en que somos pareja'], ['Titan', 'La serie que nos unio'], ['Novios', 'Lo que somos'], ['Pareja', 'Dos en uno'],
     ['Te quiero', 'Dos palabras importantes'], ['Rivas', 'Donde vivimos'], ['Granada', 'Nuestro primer gran viaje'], ['Roma', 'Viaje pendiente'],
   ],

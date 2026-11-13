@@ -498,7 +498,7 @@ export function renderGame(root: HTMLElement, params: GameParams): () => void {
     }
     board.classList.remove('punch'); void board.offsetWidth; board.classList.add('punch');
 
-    if (pl.word === 'RAGEBITE') triggerEgg('ragebite');
+    if (pl.word === 'RAGEBAIT') triggerEgg('ragebite');
     if (pl.word === 'OKMAÑANA') triggerEgg('okmanana');
     getContent().eggs.filter(e => e.word && norm(e.word) === pl.word).forEach(e => triggerEgg(e.id));
     if (duo) { duo.send(idx); count.textContent = liveCount(); }
