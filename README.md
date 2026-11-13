@@ -1,160 +1,99 @@
 # SopaVentura
 
-Sopa de letras en español, estilo pixel art, hecha como regalo privado. Es una **PWA**: se instala desde Safari en el iPhone ("Añadir a pantalla de inicio") y se puede jugar **sin internet**. No necesita Mac ni cuenta de Apple Developer.
+Sopa de letras en español con estética **pixel art**, hecha como regalo privado para dos personas. Es una **PWA**: se instala desde el navegador del móvil, funciona **sin internet** y no necesita tiendas de apps ni cuentas de desarrollador.
 
-- Mapa de **islas** estilo Candy Crush; cada isla mezcla varios temas.
-- **4 modos:** Chill, Contrarreloj, Con puntos y Acertijos. Reto diario y modo Infinito (99.999 niveles).
-- **Pintar por números** con hasta 30 colores y dibujos de hasta 128×128.
-- Pareja: código secreto compartido, monedas compartidas, mensajes, cartas (también programadas), buzón y notificaciones.
-- **Avatares pixel art** (chico y chica) personalizables; los predeterminados se parecen a Nico y a Izana.
-- **Retratos y recuerdos:** vuestras fotos se convierten en dibujos para pintar y, al terminarlos, desbloquean el recuerdo (la foto) como recompensa.
-- Islas con temas de series, música, Rivas, **Metro de Madrid y zonas famosas de Madrid**.
-- Panel secreto solo para Nico: fotos, cartas, vales, palabras, huevos de pascua y conversor foto → dibujo.
+<p align="center">
+  <img src="docs/capturas/02-menu.png" width="230" alt="Menú principal" />
+  <img src="docs/capturas/03-mapa.png" width="230" alt="Mapa de islas" />
+  <img src="docs/capturas/04-partida.png" width="230" alt="Partida" />
+</p>
 
-## Estado actual y lo más importante
+## Qué incluye
 
-| | |
-|---|---|
-| **Hecho y probado** | Juego completo en modo local: mapa de 11 islas, 4 modos, reto diario, modo Infinito, tienda, logros, pintar por números (hasta 128×128), avatares, retratos con recuerdo, panel de Nico, PIN, modo oscuro, funciona sin internet. 35 tests + pruebas en navegador móvil emulado. |
-| **Escrito pero sin probar contra un proyecto real** | Todo lo que usa Supabase: entrada con código de pareja, sincronización, pintado en directo, mensajes y cartas programadas, notificaciones push. |
-| **Siguiente paso (tuyo)** | Crear el proyecto de Supabase siguiendo `docs/SUPABASE.md` (bloques: crear proyecto → acceso anónimo → pegar el SQL → código de pareja → copiar URL y clave pública). |
-| **Después** | Rellenar `.env`, probar la nube en local, subir a un repositorio **privado**, publicar en Cloudflare Pages, instalar en los iPhone y activar notificaciones. |
+**Juego**
+- Mapa de **islas** estilo Candy Crush con escenarios pintados en pixel art, criaturas tocables, clima por hora del día y estación, y progreso propio por modo.
+- **Modos:** Chill, Contrarreloj, Con puntos, Acertijos y A ciegas, además de reto diario, islas sin fin (modo Infinito) y reto semanal de pareja.
+- **Tipos de nivel** que suben de dificultad: lluvia de palabras cortas, palabras largas, sopas con forma (corazón, círculo, gato…), niebla, trampa, gigante y jefes.
+- **Palabras extra** escondidas, palabras secretas, combos, potenciadores (Congelar, Limpiar, Rayo, Radar), pistas y tienda con monedas.
+- Logros, pegatinas, misiones semanales, estadísticas por modo y fechas especiales con regalo.
 
-**Reglas que no hay que saltarse**
+**Pintar**
+- **Pintar por números** con dibujos pixel art de hasta 64×64 y 32 colores, modo "por zonas", time-lapse y GIF del resultado, tarjeta de victoria para compartir y conversor de foto a pixel art.
+- **Colorear libre** con dibujos de línea, mandala, cubo, pincel, goma y cuentagotas.
 
-- **Nunca** claves ni contraseñas en el código ni en el repositorio. Las variables `VITE_*` van en `.env` (ignorado por git) y en el panel de Cloudflare. La clave `service_role` y la privada VAPID **solo** viven en Supabase.
-- Las **fotos y retratos** están en `private/` (ignorada por git). No se suben al repositorio.
-- El repositorio debe ser **privado**.
-- Lo dudoso (títulos, nombres, datos) está en `docs/A_VERIFICAR.md`.
+**Dos jugadores**
+- Entrada con un código secreto compartido, monedas compartidas, mensajes, cartas (también programadas) y buzón.
+- **Jugar juntos** en directo: duelo, en equipo y pintar juntos (también contra el bot Olaf).
+- Sopas hechas a mano que se regalan por el buzón y retos del tipo "supera mi tiempo".
 
-**Comandos**
+**Accesibilidad y ajustes**
+- Modo daltónico, letra grande, tamaño de tablero, volúmenes de música y efectos por separado, navegación con teclado y copia de seguridad exportable.
 
-| | |
-|---|---|
-| `npm install` | Instalar (solo la primera vez) |
-| `npm run dev` | Probar en `http://localhost:5173` (y en el móvil por la dirección *Network* si estáis en la misma wifi) |
-| `npm test` | Pruebas automáticas |
-| `npm run build` | Compilar para publicar |
-| `node e2e/overview.mjs` | Genera `private/vistazo.png` con las pantallas principales |
+<p align="center">
+  <img src="docs/capturas/01-login.png" width="170" alt="Entrada" />
+  <img src="docs/capturas/02b-jugar.png" width="170" alt="Menú Jugar" />
+  <img src="docs/capturas/06-colorear.png" width="170" alt="Colorear" />
+  <img src="docs/capturas/07-tienda.png" width="170" alt="Tienda" />
+  <img src="docs/capturas/08-logros.png" width="170" alt="Logros" />
+  <img src="docs/capturas/09-perfil.png" width="170" alt="Perfil" />
+</p>
 
-**Dónde se edita cada cosa**
+## Tecnología
 
-| Qué | Dónde |
-|---|---|
-| Palabras y pistas | `src/data/words.ts` o panel de Nico |
-| Islas y temas | `src/data/islands.ts`, `src/data/themes.ts` |
-| Frases, vales, huevos | `src/data/content.ts` o panel de Nico |
-| Avatares | `src/avatar/avatar.ts` |
-| Dibujos para pintar | `src/paint/images.ts` o conversor de fotos |
-| Animaciones | `docs/ANIMACIONES.md` |
+- **Vite + TypeScript**, sin framework de interfaz. Dibujo con **Canvas 2D** y capas CSS para los efectos.
+- **Pixel art generado por código** (escenarios, personajes, objetos y dibujos para pintar): no hay imágenes con copyright. Los escenarios se pintan en un **Web Worker** para no bloquear la interfaz.
+- **Audio sintetizado** con Web Audio (efectos y música): sin archivos de sonido ni licencias.
+- **Supabase** como backend: sesión anónima y código de pareja comprobado en el servidor (hash bcrypt), reglas de acceso (RLS) por pareja, sincronización con cola offline, **Realtime** para jugar juntos y notificaciones push (VAPID).
+- **Service worker** para funcionar sin conexión y **Cloudflare Pages** para publicarlo.
+- Pruebas con **Vitest** y pruebas en navegador con **Puppeteer** (flujo completo, botones, rendimiento).
 
-> Los pasos manuales (crear cuentas, copiar claves) están marcados con **🛑 TÚ**. Todo lo demás ya está hecho.
+## Organización
 
----
+```
+src/core        Reglas: generador de niveles, dificultad, progreso, logros, estado
+src/data        Contenido editable: palabras, islas, temas, pistas
+src/paint       Pintar por números, escenarios pixel art, GIF, tarjeta de victoria
+src/net         Supabase, modo local, cola offline, sincronización, notificaciones
+src/screens     Pantallas
+src/ui          Audio, efectos, iconos pixel, rutas, cielo animado
+supabase/       Base de datos (SQL), función de notificaciones, ejemplo de cron
+docs/           Guías y capturas
+e2e/            Pruebas en navegador
+```
 
-## 1. Probarlo en tu PC (Windows)
-
-1. Instala **Node.js** (versión LTS) desde <https://nodejs.org>. Acepta todo por defecto.
-2. Abre una terminal en esta carpeta y ejecuta:
+## Probarlo en local
 
 ```bash
 npm install
 npm run dev
 ```
 
-3. Abre la dirección que aparece (normalmente <http://localhost:5173>). En el ordenador, pulsa **F12** y el icono del móvil para verlo como en un teléfono.
-
-Sin configurar nada, la app funciona en **modo local**: todo se guarda solo en ese navegador (útil para probar). Entra con "Nico" o "Izana" y cualquier código de 4 o más caracteres. En este modo no hay pareja real, ni fotos en la nube, ni notificaciones.
-
-### Comandos útiles
+Sin configurar nada funciona en **modo local** (todo se guarda en el navegador; entra con "Nico" o "Izana" y cualquier código de 4 o más caracteres). Para usar la nube, copia `.env.example` a `.env` y rellénalo (guía en `docs/SUPABASE.md`).
 
 | Comando | Para qué |
 |---|---|
 | `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Compila para publicar (carpeta `dist`) |
-| `npm run preview` | Sirve la versión compilada (para probar el modo sin internet) |
-| `npm test` | Pruebas automáticas (generador de niveles, detección de palabras, conversor de fotos, motor de pintado, cola offline) |
-| `node e2e/smoke.mjs` | Prueba completa en un Chrome de móvil emulado (necesita `npm run preview --port 4174` en marcha) |
-| `node e2e/perf.mjs` | Mide los fotogramas al pintar 128×128 |
+| `npm run build` | Compilar para publicar (carpeta `dist`) |
+| `npm run preview` | Servir la versión compilada |
+| `npm test` | Pruebas automáticas |
+| `npm run e2e` | Prueba completa en un Chrome de móvil emulado |
+| `node e2e/capturas.mjs` | Regenera las capturas de `docs/capturas` |
 
----
+## Publicar e instalar
 
-## 2. Publicarlo gratis (Cloudflare Pages)
+1. Repositorio **privado** en GitHub y proyecto en **Cloudflare Pages** conectado a él (comando `npm run build`, carpeta `dist`).
+2. Variables de entorno en Cloudflare: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_VAPID_PUBLIC_KEY`.
+3. En el iPhone: abrir la dirección en **Safari** > Compartir > **Añadir a pantalla de inicio**, y abrir la app desde el icono.
 
-Hay que publicarlo en una dirección **https** para poder instalarlo en el iPhone.
+## Seguridad
 
-1. 🛑 **TÚ:** sube este proyecto a un repositorio **privado** de GitHub. Hazlo privado: así nadie puede leer el contenido base.
-2. 🛑 **TÚ:** crea una cuenta gratis en <https://pages.cloudflare.com> → *Create a project* → conecta el repositorio.
-3. Configuración de compilación:
-   - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-4. En *Settings → Environment variables* añade (ver `docs/SUPABASE.md` para obtener los valores):
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-   - `VITE_VAPID_PUBLIC_KEY`
-5. *Deploy*. Cada vez que subas cambios a GitHub se publica solo.
+- **Nunca** hay claves ni contraseñas en el código ni en el repositorio. Las variables `VITE_*` van en `.env` (ignorado por git) y en el panel de Cloudflare. La clave de servicio y la privada VAPID solo viven en Supabase.
+- La clave pública de Supabase está pensada para el navegador: la protegen las reglas RLS de `supabase/migrations/0001_init.sql`.
+- Las fotos y el contenido personal están fuera del repositorio (`private/`, y Supabase).
 
-> Alternativas igual de gratuitas: Netlify o Vercel (mismos pasos). GitHub Pages solo sirve si el repositorio es público, y no lo recomiendo.
+## Límites conocidos
 
-**Nunca** pongas claves en el código. Las variables van **solo** en el panel de Cloudflare (y en un archivo `.env` local, que ya está ignorado por git; hay un ejemplo en `.env.example`).
+- La vibración en iPhone depende de un truco háptico que puede no notarse; el juego también se apoya en animación y sonido.
+- El plan gratuito de Supabase pausa el proyecto tras una semana sin uso; `docs/SUPABASE.md` explica cómo evitarlo.
 
----
-
-## 3. Instalarlo en el iPhone
-
-1. Abre la dirección de Cloudflare en **Safari** (tiene que ser Safari).
-2. Botón **Compartir** → **Añadir a pantalla de inicio** → *Añadir*.
-3. Abre la app **desde el icono**. Así se ve a pantalla completa, funciona sin internet y permite notificaciones.
-4. Entrad cada uno con vuestro nombre y el código secreto de pareja.
-5. *Ajustes → Notificaciones → Activar* (solo funciona con la app instalada, iOS 16.4 o superior).
-
----
-
-## 4. Cómo está organizado
-
-```
-src/core        Reglas: generador de niveles, selección, progreso, logros, estado
-src/data        Contenido editable: palabras (words.ts), islas, temas, frases (content.ts)
-src/paint       Pintar por números: motor, conversor de fotos, dibujos incluidos
-src/net         Nube: Supabase, modo local, cola offline, sincronización, notificaciones
-src/screens     Pantallas
-src/ui          Audio, confeti, iconos pixel, rutas, PIN, tema
-supabase/       Base de datos (SQL), función de notificaciones, ejemplo de cron
-docs/           Guías y listas
-e2e/            Pruebas en navegador
-```
-
-### Editar el contenido sin tocar código del juego
-
-- **Desde la propia app (Nico):** *Ajustes → Panel secreto de Nico*. Subir fotos, convertir fotos en dibujos, vales, final del juego, palabras, huevos de pascua y frases.
-- **En archivos:** `src/data/words.ts` (palabras y pistas por tema; formato `'Palabra'` o `['Palabra', 'pista']`), `src/data/islands.ts` (islas y qué temas mezclan) y `src/data/content.ts` (frases cariñosas, vales y huevos de ejemplo).
-- Lo **personal** (cartas, fotos, vales reales, final) escríbelo en el panel: se guarda en Supabase, no en el repositorio.
-
-### Fotos vuestras (privadas)
-
-Los retratos y recuerdos se generan con vuestras fotos y **no se suben al repositorio** (la carpeta `private/` está en `.gitignore`):
-
-```bash
-node scripts/import-photos.mjs --nosotros "ruta/los-dos.png" --nico "ruta/nico.png" --izana "ruta/izana.png"
-```
-
-Se usan solo recortes de la cara. Para que salgan en los móviles: *Ajustes → Panel secreto de Nico → Dibujos subidos → Subir mis dibujos y fotos a la nube* (van al almacenamiento privado de Supabase). También puedes añadir fotos nuevas desde el panel con el conversor.
-
-Recompensas por defecto: *Nosotros* al completar la Isla Cuchi, *Nico* al completar la Isla Olaf e *Izana* al completar la Isla Maleta.
-
-### Música y sonido
-
-Todo el sonido (efectos y música chiptune relajante) se **genera dentro del juego** con Web Audio: es original, sin archivos y sin problemas de licencia, y funciona sin internet. Si prefieres pistas propias, estas fuentes tienen licencias claras: OpenGameArt (filtra por CC0), Kevin MacLeod en incompetech.com (CC BY: hay que citarle) o Pixabay Music (licencia Pixabay). Guarda el archivo en `public/` y cambia `startMusic` en `src/ui/audio.ts`.
-
----
-
-## 5. Cosas que debes saber (límites honestos)
-
-- **Vibración en iPhone:** Safari no admite la vibración web estándar. Se usa un truco háptico que funciona en iOS 17.4+ pero **puede no notarse**; el juego se apoya también en animación y sonido.
-- **No lo he probado en un iPhone real.** Lo he probado en Chrome con un móvil emulado (toques, sin internet, rendimiento). Pruébalo en vuestros móviles y dime qué ves.
-- **Dibujos y fondos pixel art:** los genera el propio juego (son originales, sin material con copyright). Son sencillos; si quieres arte más elaborado, se pueden sustituir por tus propios dibujos con el conversor de fotos.
-- **Pintado en tiempo real:** si los dos pintáis el mismo dibujo, os veis en directo. Sin conexión, los cambios se guardan y se envían al volver (cola de pendientes).
-- **Supabase gratis** pausa un proyecto tras ~1 semana sin actividad. Mira `docs/SUPABASE.md` (paso 8) para evitarlo.
-- Lo dudoso (títulos de canciones, datos) está en `docs/A_VERIFICAR.md`.
-
-Documentos: `docs/SUPABASE.md` (nube y notificaciones paso a paso) · `docs/A_VERIFICAR.md` · `docs/ANIMACIONES.md`.
+Guías: `docs/SUPABASE.md` (nube y notificaciones paso a paso) · `docs/A_VERIFICAR.md` · `docs/ANIMACIONES.md`.
